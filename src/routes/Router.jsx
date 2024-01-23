@@ -3,7 +3,8 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Register from "../pages/authPages/Register";
 import Login from "../pages/authPages/Login";
-import Dashboard from "../pages/Dashboard";
+import DashboardLayout from "../layouts/DashboardLayout";
+import AddNewHouse from "../pages/dashboardPages/AddNewHouse";
 
 const router = createBrowserRouter([
   {
@@ -14,10 +15,6 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home />,
       },
-      {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
     ],
   },
   {
@@ -27,6 +24,16 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "add-new-house",
+        element: <AddNewHouse />,
+      },
+    ],
   },
 ]);
 
