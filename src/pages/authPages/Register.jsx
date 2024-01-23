@@ -3,6 +3,7 @@ import logo from "../../assets/house.png";
 import { FaUser, FaUserTie, FaPhoneAlt, FaLock } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -26,12 +27,11 @@ const Register = () => {
         body: JSON.stringify(data),
       });
       if (response.ok) {
-        const result = await response.json();
-        console.log("Registration successful. Token:", result.token);
+        toast.success("Registration successful.");
 
         navigate("/login");
       } else {
-        console.error("Registration failed");
+        toast.success("Registration failed.");
       }
     } catch (error) {
       console.error("Error during registration:", error);

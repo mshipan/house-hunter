@@ -1,6 +1,17 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/house.png";
+import { useState } from "react";
+import useAuth from "../../hooks/useAuth";
 const Navbar = () => {
+  const { logout } = useAuth();
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    setLoggedIn(false);
+    navigate("/login");
+  };
   return (
     <div className="bg-gray-800 py-6">
       <div className="w-2/3 mx-auto flex items-center justify-between">
@@ -26,12 +37,25 @@ const Navbar = () => {
             <li className="font-serif text-white hover:text-green-500">
               <NavLink to="/dashboard">Dashboard</NavLink>
             </li>
-            <li className="font-serif text-white hover:text-green-500">
-              <NavLink to="/login">Login</NavLink>
-            </li>
-            <li className="font-serif text-white hover:text-green-500">
-              <NavLink to="/register">Register</NavLink>
-            </li>
+            {!isLoggedIn ? (
+              <li className="font-serif text-white hover:text-green-500 bg-green-500 hover:bg-transparent transition-all ease-in-out duration-300">
+                <button
+                  onClick={handleLogout}
+                  className="border border-green-500 px-4 py-1"
+                >
+                  Logout
+                </button>
+              </li>
+            ) : (
+              <>
+                <li className="font-serif text-white hover:text-green-500">
+                  <NavLink to="/login">Login</NavLink>
+                </li>
+                <li className="font-serif text-white hover:text-green-500">
+                  <NavLink to="/register">Register</NavLink>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </div>

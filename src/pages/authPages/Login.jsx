@@ -3,6 +3,7 @@ import logo from "../../assets/house.png";
 import { FaLock } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,11 +26,12 @@ const Login = () => {
 
       if (response.ok) {
         const result = await response.json();
-        console.log("Login successful. Token:", result.token);
+        toast.success(`${result.user.name} Loggedin successfully.`);
+        localStorage.setItem("access-token", result.token);
 
         navigate("/dashboard");
       } else {
-        console.error("Login failed");
+        toast.error("Login failed.");
       }
     } catch (error) {
       console.error("Error during login:", error);
