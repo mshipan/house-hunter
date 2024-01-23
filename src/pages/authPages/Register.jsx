@@ -2,17 +2,42 @@ import { useForm } from "react-hook-form";
 import logo from "../../assets/house.png";
 import { FaUser, FaUserTie, FaPhoneAlt, FaLock } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+
   const password = watch("password");
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Registration successful. Token:", result.token);
+
+        navigate("/login");
+      } else {
+        console.error("Registration failed");
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+    }
+  };
+
   return (
     <div className="bg-emerald-400 h-screen">
       <div className="h-full w-full flex items-center justify-center">
