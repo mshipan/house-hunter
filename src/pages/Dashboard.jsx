@@ -1,28 +1,43 @@
+import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
-import { useGetUserByEmailQuery } from "../redux/features/api/usersApi";
 
 const Dashboard = () => {
   const { user } = useAuth();
 
-  const {
-    data: filteredUser,
-    isLoading,
-    isError,
-  } = useGetUserByEmailQuery(user?.email);
-  if (isLoading) {
-    return <p className="text-lg text-black font-mono">Loading...</p>;
-  }
-  if (isError) {
-    return (
-      <p className="text-lg text-black font-mono">Error Loading data...</p>
-    );
-  }
+  const [fetchedData, setFetchedData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_baseApi}/user/${user?.email}`,
+          {
+            method: "GET",
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("access-token")}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const result = await response.json();
+        setFetchedData(result);
+      } catch (error) {
+        console.error("Error fetching data from the server", error);
+      }
+    };
+
+    fetchData();
+  }, [user?.email]);
 
   return (
     <div>
       <h1 className="text-white text-xl font-serif">Welcome to Dashboard</h1>
-      <p>welcome {filteredUser?.email}</p>
-      <p>Role: {filteredUser?.role}</p>
+      <p>welcome {fetchedData?.email}</p>
+      <p>Role: {fetchedData?.role}</p>
     </div>
   );
 };

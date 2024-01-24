@@ -4,6 +4,7 @@ import { createContext, useEffect, useState } from "react";
 export const AuthContext = createContext(null);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("access-token");
@@ -11,6 +12,7 @@ const AuthProvider = ({ children }) => {
     if (token) {
       const decodedUser = jwtDecode(token);
       setUser(decodedUser);
+      setToken(token);
     }
   }, []);
 
@@ -20,6 +22,8 @@ const AuthProvider = ({ children }) => {
   };
   const authInfo = {
     user,
+    token,
+    setToken,
     logout,
   };
   return (
